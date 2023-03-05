@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <fcntl.h>
 #include <string.h>
+#include <iostream>
 #include <stdbool.h>
 #include <inttypes.h>
 #include <sys/stat.h>
@@ -17,7 +18,7 @@ int main() {
 
     int s = DB36_STATUS_OK;
 
-    db36::lib::Blob b1 = db36::lib::Blob();
+    db36::lib::blob b1 = db36::lib::blob("/db36_c/data/tests/test.bl", 24, 16, 1);
 
     // struct db36_blob *b1 = (db36_blob *)calloc(DB36_ONE, sizeof *b1);
 
@@ -66,10 +67,16 @@ int main() {
 
     srand(time(NULL));
 
-    for (int i = 0; i < 16; i++){
+    for (int i = 0; i < bytesLen; i++){
         key[i] = rand() % 255;
     }
 
+    for(int i=0; i<bytesLen; ++i)
+        printf("%x", key[i]);
+
+    // std::cout << std::format("key is {:x};\n", key);
+
+    printf("\n");
 
     db36_utils_btox_print(key, bytesLen);
 

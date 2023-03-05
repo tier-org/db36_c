@@ -10,7 +10,7 @@
 namespace db36 {
 namespace lib {
 
-class Blob {
+class blob {
 public:
     //
     // parameters, set before init
@@ -31,6 +31,8 @@ public:
     uint64_t recordsCount; // count of records
     uint64_t capacitySize; // size of bytes allocated for the whole blob  
     uint16_t shift;
+
+    blob(std::string path, uint8_t capacity, uint8_t keySize, uint8_t valueSize);
 
     uint64_t calc_slot(char *key);
          int init_params();
