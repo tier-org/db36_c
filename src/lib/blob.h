@@ -7,7 +7,11 @@
 #define DB36_BLOB_DEFAULT_PERM 0666
 #define DB36_BLOB_FD_OPEN_MODE "w"
 
-struct db36_blob {
+namespace db36 {
+namespace lib {
+
+class Blob {
+public:
     //
     // parameters, set before init
     //
@@ -27,10 +31,12 @@ struct db36_blob {
     uint64_t recordsCount; // count of records
     uint64_t capacitySize; // size of bytes allocated for the whole blob  
     uint16_t shift;
+
+    uint64_t calc_slot(char *key);
+         int init_params();
+         int init_file();
 };
 
-uint64_t db36_blob_calc_slot(struct db36_blob *bl, char *key);
-     int db36_blob_init_params(struct db36_blob *bl);
-     int db36_blob_init_file(struct db36_blob *bl);
+}}
 
 #endif // DB36_LIB_BLOB_H

@@ -10,40 +10,42 @@
 #include <lib/blob.h>
 // #include <iterator>
 
-
 int main() {
     struct timespec start, end;
     clock_gettime(CLOCK_MONOTONIC_RAW, &start);
 
 
     int s = DB36_STATUS_OK;
-    struct db36_blob *b1 = calloc(DB36_ONE, sizeof *b1);
 
-    b1->path = strdup("/db36_c/data/tests/test.bl");
-    b1->keySize = 16; // bytes
-    b1->valueSize = 1;
-    b1->capacity = 24;
+    db36::lib::Blob b1 = db36::lib::Blob();
 
-    if ((s = db36_blob_init_params(b1)) != DB36_STATUS_OK) {
+    // struct db36_blob *b1 = (db36_blob *)calloc(DB36_ONE, sizeof *b1);
+
+    b1.path = strdup("/db36_c/data/tests/test.bl");
+    b1.keySize = 16; // bytes
+    b1.valueSize = 1;
+    b1.capacity = 24;
+
+    if ((s = b1.init_params()) != DB36_STATUS_OK) {
         return s;
     }
-    if ((s = db36_blob_init_file(b1)) != DB36_STATUS_OK) {
+    if ((s = b1.init_file()) != DB36_STATUS_OK) {
         return s;
     }
 
 
-    printf("%s\n", b1->path);
-    printf("%s\n", b1->dir);
-    printf("%u\n", b1->keySize);
-    printf("keybits size: %u\n", b1->keyBitsSize);
-    printf("capacity: %u\n", b1->capacity);
-    printf("shift: %u\n", b1->shift);
-    printf("%ld\n", b1->recordsCount);
-    printf("%d\n", b1->recordSize);
+    printf("%s\n", b1.path);
+    printf("%s\n", b1.dir);
+    printf("%u\n", b1.keySize);
+    printf("keybits size: %u\n", b1.keyBitsSize);
+    printf("capacity: %u\n", b1.capacity);
+    printf("shift: %u\n", b1.shift);
+    printf("%ld\n", b1.recordsCount);
+    printf("%d\n", b1.recordSize);
 
 
     int bytesLen = 16;
-    char *key = calloc(bytesLen, sizeof *key);
+    char *key = (char *)calloc(bytesLen, sizeof *key);
 
     key[0] = 0xFF;
     key[1] = 0xEE;
@@ -64,21 +66,21 @@ int main() {
 
     srand(time(NULL));
 
-    for (int i = 0; i < 15; i++){
+    for (int i = 0; i < 16; i++){
         key[i] = rand() % 255;
     }
 
 
     db36_utils_btox_print(key, bytesLen);
 
-    uint64_t key_i = db36_blob_calc_slot(b1, key);
+    uint64_t key_i = b1.calc_slot(key);
 
 
     for(int i = 0; i < 100000; i++){
         for (int i = 0; i < 15; i++){
             key[i] = rand() % 255;
         }
-        key_i = db36_blob_calc_slot(b1, key);
+        key_i = b1.calc_slot(key);
     }
 
     clock_gettime(CLOCK_MONOTONIC_RAW, &end);
