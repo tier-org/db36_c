@@ -95,9 +95,6 @@ int main() {
     uint64_t delta_us = (end.tv_sec - start.tv_sec) * 1000000 + (end.tv_nsec - start.tv_nsec) / 1000;
     printf("took %lu us\n", delta_us);
 
-
-
-
     printf("key_i: %lu\n", key_i);
     printf("key_i: %lX\n", key_i);
 

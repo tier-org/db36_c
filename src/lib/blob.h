@@ -32,9 +32,9 @@ public:
     uint64_t capacitySize; // size of bytes allocated for the whole blob  
     uint16_t shift;
 
-    blob(std::string path, uint8_t capacity, uint8_t keySize, uint8_t valueSize);
+    blob(std::string, uint8_t, uint8_t, uint8_t);
 
-    uint64_t calc_slot(char *key);
+    uint64_t calc_slot(char *);
          int init_params();
          int init_file();
 };
