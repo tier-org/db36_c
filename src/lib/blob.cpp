@@ -30,7 +30,7 @@ void blob::print_info() {
            path, dir, keySize, keyBitsSize, capacity, shift, recordsCount, recordSize, recordSizeLn);
 }
 
-uint64_t blob::calc_slot(char *key) {
+uint64_t blob::calc_slot(const char *key) {
     uint64_t key_i = 0;
     memcpy(&key_i, key, DB36_UINT64_BYTES_COUNT);
     // key_i = key_i << shift >> shift;
@@ -38,19 +38,19 @@ uint64_t blob::calc_slot(char *key) {
     return key_i;
 }
 
-void blob::read_at(uint64_t address, char *data) {
-    if (pread(fd, data, recordSize, address << recordSizeLn) != recordSize){
+void blob::read_at(const uint64_t address, char *data) {
+    if (pread(fd, data, recordSize, address * recordSize) != recordSize){
         throw blobReadWrongBytesException();
     }
 }
 
-void blob::write_at(uint64_t address, char *data) {
-    if (pwrite(fd, data, recordSize, address << recordSizeLn) != recordSize){
+void blob::write_at(const uint64_t address, char *data) {
+    if (pwrite(fd, data, recordSize, address * recordSize) != recordSize){
         throw blobWriteWrongBytesException();
     }
 }
 
-std::pair<uint64_t, uint8_t> blob::get(char *key, char *value) {
+std::pair<uint64_t, uint8_t> blob::get(const char *key, char *value) {
     uint64_t address = calc_slot(key);
     uint8_t iters = 0;
 
@@ -75,34 +75,24 @@ std::pair<uint64_t, uint8_t> blob::get(char *key, char *value) {
     return std::make_pair(address, iters);
 }
 
-std::pair<uint64_t, uint8_t> blob::set(char *key, char *value) {
+std::pair<uint64_t, uint8_t> blob::set(const char *key, char *value) {
     uint64_t address = calc_slot(key);
     uint8_t iters = 0;
-    uint8_t i;
-    bool is_key;
-    bool is_zero;
 
     if (capacity) {
         char *data = (char *)calloc(recordSize, sizeof *data);
         while (++iters <= capacity) {
             read_at(address, data);
-            i = 0;
-            is_key = true;
-            is_zero = true;
-            while (i < keySize) {
-                is_key &= data[i] == key[i];
-                is_zero &= data[i] == 0;
-                i++;
-            }
-            if (is_key || is_zero) {
+            if (
+                (memcmp(data, key, keySize) == 0) ||
+                (memcmp(data, keyZero, keySize) == 0)
+            ) {
                 memcpy(data, key, keySize);
                 memcpy(&data[keySize], value, valueSize);
                 write_at(address, data);
                 break;
             }
-            // if (std::memcmp(data, key, keySize) == 0) {
-            //     break;
-            // }
+
             address++;
         }
         free(data);
@@ -131,6 +121,7 @@ void blob::init_params() {
     }
     recordSizeLn = DB36_LL_LOG2(recordSize);
     capacitySize = recordSize * recordsCount;
+    keyZero = (char *)calloc(keySize, sizeof *keyZero);
 }
 
 void blob::init_file() {

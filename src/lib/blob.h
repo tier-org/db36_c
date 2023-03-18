@@ -33,6 +33,7 @@ public:
     uint64_t recordsCount; // count of records
     uint64_t capacitySize; // size of bytes allocated for the whole blob  
     uint16_t shift;
+    char *keyZero;
 
     blob(char *path,
          uint8_t capacity,
@@ -41,14 +42,14 @@ public:
     blob() = default;
     ~blob() = default;
 
-    uint64_t calc_slot(char *key);
+    uint64_t calc_slot(const char *key);
         void print_info();
         void init_params();
         void init_file();
-        void read_at(uint64_t address, char *data);
-        void write_at(uint64_t address, char *data);
-        std::pair<uint64_t, uint8_t> get(char *key, char *value);
-        std::pair<uint64_t, uint8_t> set(char *key, char *value);
+        void read_at(const uint64_t address, char *data);
+        void write_at(const uint64_t address, char *data);
+        std::pair<uint64_t, uint8_t> get(const char *key, char *value);
+        std::pair<uint64_t, uint8_t> set(const char *key, char *value);
 };
 
 class blobFileEnoentException: public std::exception {
