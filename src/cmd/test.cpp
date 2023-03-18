@@ -10,7 +10,7 @@
 #include <lib/utils.h>
 #include <lib/blob.h>
 
-int main() {
+int main(int argc, char* argv[]) {
     //
     // init helpers to calc time and use random
     //
@@ -21,11 +21,11 @@ int main() {
     //
     // blob and experiment params
     //
-    uint64_t n = 1000;
-    uint8_t capacity = 24;
-    uint8_t keySize = 16;
-    uint8_t valueSize = 4;
-    char* fp = strdup("/db36_c/data/tests/test.bl");
+    char* fp = strdup(argv[1]); // strdup("/db36_c/data/tests/test.bl");
+    uint8_t capacity = strtoull(argv[2], NULL, 0); // 24;
+    uint8_t keySize = strtoull(argv[3], NULL, 0); // 16;
+    uint8_t valueSize = strtoull(argv[4], NULL, 0); // 4;
+    uint64_t n = strtoull(argv[5], NULL, 0); // 1000;
 
     //
     // init and print data
