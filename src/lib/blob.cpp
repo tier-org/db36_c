@@ -26,8 +26,8 @@ void blob::print_info() {
            "\tCapacity: 2^%u\n"
            "\tShift: %u bits\n"
            "\tRecords count: %ld\n"
-           "\tRecord size: %d bytes\n",
-           path, dir, keySize, keyBitsSize, capacity, shift, recordsCount, recordSize);
+           "\tRecord size: %d bytes (2^%d)\n",
+           path, dir, keySize, keyBitsSize, capacity, shift, recordsCount, recordSize, recordSizeLn);
 }
 
 uint64_t blob::calc_slot(char *key) {
@@ -39,13 +39,13 @@ uint64_t blob::calc_slot(char *key) {
 }
 
 void blob::read_at(uint64_t address, char *data) {
-    if (pread(fd, data, recordSize, address * recordSize) != recordSize){
+    if (pread(fd, data, recordSize, address << recordSizeLn) != recordSize){
         throw blobReadWrongBytesException();
     }
 }
 
 void blob::write_at(uint64_t address, char *data) {
-    if (pwrite(fd, data, recordSize, address * recordSize) != recordSize){
+    if (pwrite(fd, data, recordSize, address << recordSizeLn) != recordSize){
         throw blobWriteWrongBytesException();
     }
 }
@@ -129,6 +129,7 @@ void blob::init_params() {
         recordsCount <<= keyBitsSize;
         recordSize = valueSize;
     }
+    recordSizeLn = DB36_LL_LOG2(recordSize);
     capacitySize = recordSize * recordsCount;
 }
 

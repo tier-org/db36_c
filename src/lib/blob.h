@@ -29,6 +29,7 @@ public:
     struct stat *filestat;
     uint16_t keyBitsSize; // number of bits of a key
     uint16_t recordSize; // size of one record: valueSize or keySize + valueSize
+    uint8_t recordSizeLn; // log of size for fast multiplication
     uint64_t recordsCount; // count of records
     uint64_t capacitySize; // size of bytes allocated for the whole blob  
     uint16_t shift;
