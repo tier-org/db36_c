@@ -18,21 +18,21 @@ public:
     //
     char *path;
     char *dir;
-    uint_fast16_t keySize; // bytes
-    uint_fast16_t valueSize; // bytes
-    uint_fast8_t capacity; // 2 ** capacity records in total, 0 means full range mapping
+    uint_fast16_t keySize = 0; // bytes
+    uint_fast16_t valueSize = 0; // bytes
+    uint_fast8_t capacity = 0; // 2 ** capacity records in total, 0 means full range mapping
     //
     // calc values are not set directly, just using a constructor
     //
     FILE *file;
     int fd;
     struct stat *filestat;
-    uint_fast32_t keyBitsSize; // number of bits of a key
-    uint_fast32_t recordSize; // size of one record: valueSize or keySize + valueSize
+    uint_fast32_t keyBitsSize = 0; // number of bits of a key
+    uint_fast32_t recordSize = 0; // size of one record: valueSize or keySize + valueSize
 
-    uint_fast64_t recordsCount; // count of records
-    uint_fast64_t capacitySize; // size of bytes allocated for the whole blob
-    uint_fast16_t shift;
+    uint_fast64_t recordsCount = 0; // count of records
+    uint_fast64_t capacitySize = 0; // size of bytes allocated for the whole blob
+    uint_fast16_t shift = 0;
     char *keyZero;
 
     blob(char *path,
