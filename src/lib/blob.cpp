@@ -33,8 +33,7 @@ void blob::print_info() {
 uint64_t blob::calc_slot(const char *key) {
     uint64_t key_i = 0;
     memcpy(&key_i, key, DB36_UINT64_BYTES_COUNT);
-    // key_i = key_i << shift >> shift;
-    key_i = key_i >> shift;
+    key_i = key_i << shift >> shift;
     return key_i;
 }
 
