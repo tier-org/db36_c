@@ -9,9 +9,9 @@ namespace db36 {
 namespace lib {
 
 blob::blob(char *path,
-           uint8_t capacity,
-           uint8_t keySize,
-           uint8_t valueSize) {
+           uint_fast8_t capacity,
+           uint_fast16_t keySize,
+           uint_fast16_t valueSize) {
     this->path = path;
     this->keySize = keySize;
     this->valueSize = valueSize;
@@ -22,37 +22,37 @@ blob::blob(char *path,
 
 void blob::print_info() {
     printf("[*] Blob %s in directory %s is initialized for:\n"
-           "\tKey size: %u bytes (%u bits)\n"
+           "\tKey size: %lu bytes (%lu bits)\n"
            "\tCapacity: 2^%u\n"
-           "\tShift: %u bits\n"
+           "\tShift: %lu bits\n"
            "\tRecords count: %ld\n"
-           "\tRecord size: %d bytes (2^%d)\n",
-           path, dir, keySize, keyBitsSize, capacity, shift, recordsCount, recordSize, recordSizeLn);
+           "\tRecord size: %lu bytes\n",
+           path, dir, keySize, keyBitsSize, capacity, shift, recordsCount, recordSize);
 }
 
-uint64_t blob::calc_slot(const char *key) {
-    uint64_t key_i = 0;
+uint_fast64_t blob::calc_slot(const char *key) {
+    uint_fast64_t key_i = 0;
     memcpy(&key_i, key, DB36_UINT64_BYTES_COUNT);
     // key_i = key_i << shift >> shift;
     key_i = key_i >> shift;
     return key_i;
 }
 
-void blob::read_at(const uint64_t address, char *data) {
-    if (pread(fd, data, recordSize, address * recordSize) != recordSize){
+void blob::read_at(const uint_fast64_t address, char *data) {
+    if (pread(fd, data, recordSize, address * recordSize) - recordSize != 0){
         throw blobReadWrongBytesException();
     }
 }
 
-void blob::write_at(const uint64_t address, char *data) {
-    if (pwrite(fd, data, recordSize, address * recordSize) != recordSize){
+void blob::write_at(const uint_fast64_t address, char *data) {
+    if (pwrite(fd, data, recordSize, address * recordSize) - recordSize != 0){
         throw blobWriteWrongBytesException();
     }
 }
 
-std::pair<uint64_t, uint8_t> blob::get(const char *key, char *value) {
-    uint64_t address = calc_slot(key);
-    uint8_t iters = 0;
+std::pair<uint_fast64_t, uint_fast8_t> blob::get(const char *key, char *value) {
+    uint_fast64_t address = calc_slot(key);
+    uint_fast8_t iters = 0;
 
     if (capacity) {
         char *data = (char *)calloc(recordSize, sizeof *data);
@@ -75,9 +75,9 @@ std::pair<uint64_t, uint8_t> blob::get(const char *key, char *value) {
     return std::make_pair(address, iters);
 }
 
-std::pair<uint64_t, uint8_t> blob::set(const char *key, char *value) {
-    uint64_t address = calc_slot(key);
-    uint8_t iters = 0;
+std::pair<uint_fast64_t, uint_fast8_t> blob::set(const char *key, char *value) {
+    uint_fast64_t address = calc_slot(key);
+    uint_fast8_t iters = 0;
 
     if (capacity) {
         char *data = (char *)calloc(recordSize, sizeof *data);
@@ -119,7 +119,6 @@ void blob::init_params() {
         recordsCount <<= keyBitsSize;
         recordSize = valueSize;
     }
-    recordSizeLn = DB36_LL_LOG2(recordSize);
     capacitySize = recordSize * recordsCount;
     keyZero = (char *)calloc(keySize, sizeof *keyZero);
 }
@@ -128,7 +127,7 @@ void blob::init_file() {
     dir = strdup(path);
     dir[strrchr(path, DB36_PATH_DELIM) - path] = DB36_STR_TERM;
 
-    fd = open(path, O_RDWR|O_CREAT|O_DIRECT, DB36_BLOB_DEFAULT_PERM);
+    fd = open(path, O_RDWR|O_CREAT, DB36_BLOB_DEFAULT_PERM);
     if (fd < 0) {
         throw blobFileEnoentException(path);
     }

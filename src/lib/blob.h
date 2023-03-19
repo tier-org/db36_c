@@ -18,38 +18,38 @@ public:
     //
     char *path;
     char *dir;
-    uint8_t keySize; // bytes
-    uint8_t valueSize; // bytes
-    uint8_t capacity; // 2 ** capacity records in total, 0 means full range mapping
+    uint_fast16_t keySize; // bytes
+    uint_fast16_t valueSize; // bytes
+    uint_fast8_t capacity; // 2 ** capacity records in total, 0 means full range mapping
     //
     // calc values are not set directly, just using a constructor
     //
     FILE *file;
     int fd;
     struct stat *filestat;
-    uint16_t keyBitsSize; // number of bits of a key
-    uint16_t recordSize; // size of one record: valueSize or keySize + valueSize
-    uint8_t recordSizeLn; // log of size for fast multiplication
-    uint64_t recordsCount; // count of records
-    uint64_t capacitySize; // size of bytes allocated for the whole blob  
-    uint16_t shift;
+    uint_fast32_t keyBitsSize; // number of bits of a key
+    uint_fast32_t recordSize; // size of one record: valueSize or keySize + valueSize
+
+    uint_fast64_t recordsCount; // count of records
+    uint_fast64_t capacitySize; // size of bytes allocated for the whole blob
+    uint_fast16_t shift;
     char *keyZero;
 
     blob(char *path,
-         uint8_t capacity,
-         uint8_t keySize,
-         uint8_t valueSize);
+         uint_fast8_t capacity,
+         uint_fast16_t keySize,
+         uint_fast16_t valueSize);
     blob() = default;
     ~blob() = default;
 
-    uint64_t calc_slot(const char *key);
+    uint_fast64_t calc_slot(const char *key);
         void print_info();
         void init_params();
         void init_file();
-        void read_at(const uint64_t address, char *data);
-        void write_at(const uint64_t address, char *data);
-        std::pair<uint64_t, uint8_t> get(const char *key, char *value);
-        std::pair<uint64_t, uint8_t> set(const char *key, char *value);
+        void read_at(const uint_fast64_t address, char *data);
+        void write_at(const uint_fast64_t address, char *data);
+        std::pair<uint_fast64_t, uint_fast8_t> get(const char *key, char *value);
+        std::pair<uint_fast64_t, uint_fast8_t> set(const char *key, char *value);
 };
 
 class blobFileEnoentException: public std::exception {
@@ -85,11 +85,11 @@ public:
 
 class blobReadWrongBytesException: public std::exception {
 private:
-    // uint64_t *expected;
-    // uint64_t *actual;
+    // uint_fast64_t *expected;
+    // uint_fast64_t *actual;
 public:
-    // blobReadWrongBytesException(uint64_t *expected,
-    //                         uint64_t *actual) :
+    // blobReadWrongBytesException(uint_fast64_t *expected,
+    //                         uint_fast64_t *actual) :
     //                         expected(expected),
     //                         actual(actual)
     //                         {}

@@ -21,11 +21,11 @@ int main(int argc, char* argv[]) {
     //
     // blob and experiment params
     //
-    char* fp = strdup(argv[1]); // strdup("/db36_c/data/tests/test.bl");
-    uint8_t capacity = strtoull(argv[2], NULL, 0); // 24;
-    uint8_t keySize = strtoull(argv[3], NULL, 0); // 16;
-    uint8_t valueSize = strtoull(argv[4], NULL, 0); // 4;
-    uint64_t n = strtoull(argv[5], NULL, 0); // 1000;
+    char* fp = strdup(argv[1]);
+    uint8_t capacity = strtoull(argv[2], NULL, 0);
+    uint16_t keySize = strtoull(argv[3], NULL, 0);
+    uint16_t valueSize = strtoull(argv[4], NULL, 0);
+    uint64_t n = strtoull(argv[5], NULL, 0);
 
     //
     // init and print data
