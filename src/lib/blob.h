@@ -51,51 +51,13 @@ public:
         std::pair<uint64_t, uint8_t> set(const char *key, char *value);
 };
 
-class blobFileEnoentException: public std::exception {
-private:
-    char *message;
-public:
-    blobFileEnoentException(char *msg) : message(msg) {}
-    char* what() {
-        return message;
-    }
-};
-
-class blobCollisionCapacityWriteException: public std::exception {
-public:
-    char* what() {
-        return (char*)(std::string("Error during write: couldn't find an address to write data to!").c_str());
-    }
-};
-
-class blobCollisionCapacityReadException: public std::exception {
-public:
-    char* what() {
-        return (char*)(std::string("Error during read: couldn't find an address to read data from!").c_str());
-    }
-};
-
-class blobWriteWrongBytesException: public std::exception {
-public:
-    char* what() {
-        return (char*)(std::string("Wrong bytes written!").c_str());
-    }
-};
-
-class blobReadWrongBytesException: public std::exception {
-private:
-    // uint64_t *expected;
-    // uint64_t *actual;
-public:
-    // blobReadWrongBytesException(uint64_t *expected,
-    //                         uint64_t *actual) :
-    //                         expected(expected),
-    //                         actual(actual)
-    //                         {}
-    char* what() {
-        return (char*)(std::string("Wrong bytes read!").c_str());
-    }
-};
+class blobFileEnoentException: public std::exception {};
+class blobFileStatReadException: public std::exception {};
+class blobFileSizeException: public std::exception {};
+class blobCollisionCapacityWriteException: public std::exception {};
+class blobCollisionCapacityReadException: public std::exception {};
+class blobWriteWrongBytesException: public std::exception {};
+class blobReadWrongBytesException: public std::exception {};
 
 }}
 

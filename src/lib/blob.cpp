@@ -1,4 +1,5 @@
 #include <fcntl.h>
+#include <sys/stat.h>
 #include <iostream>
 #include <cstring>
 
@@ -126,11 +127,22 @@ void blob::init_file() {
     dir = strdup(path);
     dir[strrchr(path, DB36_PATH_DELIM) - path] = DB36_STR_TERM;
 
-    fd = open(path, O_RDWR|O_CREAT, DB36_BLOB_DEFAULT_PERM);
-    if (fd < 0) {
-        throw blobFileEnoentException(path);
+    fd = open(path, O_RDWR|O_CREAT|O_ASYNC, DB36_BLOB_DEFAULT_PERM);
+
+    if (fd < 0)
+        throw blobFileEnoentException();
+
+    if (stat(path, filestat) == -1)
+        throw blobFileStatReadException();
+
+    if (filestat->st_size == 0) {
+        posix_fallocate(fd, 0, capacitySize);
+        if (stat(path, filestat) == -1)
+            throw blobFileStatReadException();
     }
-    posix_fallocate(fd, 0, capacitySize);
+
+    if (capacitySize - filestat->st_size > 0)
+        throw blobFileSizeException();
 }
 
 }}
