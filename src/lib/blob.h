@@ -25,7 +25,7 @@ public:
     // calc values are not set directly, just using a constructor
     //
     int fd;
-    struct stat *filestat;
+    struct stat fstat;
     uint32_t keyBitsSize = 0; // number of bits of a key
     uint32_t recordSize = 0; // size of one record: valueSize or keySize + valueSize
 

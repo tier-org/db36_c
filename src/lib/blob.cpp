@@ -134,16 +134,16 @@ void blob::init_file() {
     if (fd < 0)
         throw blobFileEnoentException();
 
-    if (stat(path, filestat) == -1)
+    if (stat(path, &fstat) == -1)
         throw blobFileStatReadException();
 
-    if (filestat->st_size == 0) {
+    if (fstat.st_size == 0) {
         posix_fallocate(fd, 0, capacitySize);
-        if (stat(path, filestat) == -1)
+        if (stat(path, &fstat) == -1)
             throw blobFileStatReadException();
     }
 
-    if (capacitySize - filestat->st_size > 0)
+    if (capacitySize - fstat.st_size > 0)
         throw blobFileSizeException();
 
     posix_fadvise(fd, 0, capacitySize, POSIX_FADV_RANDOM);
