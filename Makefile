@@ -36,4 +36,12 @@ mkdirs:
 .PHONY: clean
 
 clean:
-	rm -rf $(BIN_DIR)/*.o $(BINLIB_DIR)
+	rm -rf $(CMD_TARGETS) $(BINLIB_DIR)
+
+clear:
+	$(MAKE) clean
+	rm -rf $(CMD_EXECS)
+
+recompile:
+	$(MAKE) clear
+	$(MAKE) -j
