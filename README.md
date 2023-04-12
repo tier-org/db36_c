@@ -31,3 +31,11 @@ while true; do pid=$(pgrep 'tests/benchmark' | head -1); if [[ -n "$pid" ]]; the
 fincore data/file
 dd if=data/file iflag=nocache count=0
 ```
+
+# Docker build/run
+
+```
+sudo docker build . -t db36
+
+sudo docker run -it --rm -v $PWD/data:/db36_c/data --memory-swappiness=0 db36 ./bin/db36_test ./data/file 32 32 32 100000
+```

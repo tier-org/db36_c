@@ -42,14 +42,14 @@ void blob::read_at(const uint64_t address, char *data) {
     if (pread(fd, data, recordSize, address * recordSize) - recordSize != 0){
         throw blobReadWrongBytesException();
     }
-    posix_fadvise(fd, address * recordSize, recordSize, POSIX_FADV_DONTNEED);
+    // posix_fadvise(fd, address * recordSize, recordSize, POSIX_FADV_DONTNEED);
 }
 
 void blob::write_at(const uint64_t address, char *data) {
     if (pwrite(fd, data, recordSize, address * recordSize) - recordSize != 0){
         throw blobWriteWrongBytesException();
     }
-    posix_fadvise(fd, address * recordSize, recordSize, POSIX_FADV_DONTNEED);
+    // posix_fadvise(fd, address * recordSize, recordSize, POSIX_FADV_DONTNEED);
 }
 
 std::pair<uint64_t, uint8_t> blob::get(const char *key, char *value) {
@@ -146,7 +146,7 @@ void blob::init_file() {
     if (capacitySize - fstat.st_size > 0)
         throw blobFileSizeException();
 
-    posix_fadvise(fd, 0, capacitySize, POSIX_FADV_RANDOM);
+    // posix_fadvise(fd, 0, capacitySize, POSIX_FADV_RANDOM);
 }
 
 }}
