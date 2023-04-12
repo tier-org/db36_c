@@ -22,7 +22,7 @@ all: mkdirs $(LIB_TARGETS) $(CMD_TARGETS)
 	$(MAKE) clean
 
 $(BIN_DIR)/$(EXEC_PREFIX)%: $(CMD_DIR)/%.cpp
-	$(CC) $(CFLAGS) -o $@ $(BINLIB_DIR)/*.o $(BIN_DIR)/*.o
+	$(CC) $(CFLAGS) -o $@ $(BINLIB_DIR)/*.o $(BIN_DIR)/$*.o
 
 $(BIN_DIR)/%.o: $(CMD_DIR)/%.cpp
 	$(CC) $(CFLAGS) -c $^ -o $@

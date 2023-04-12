@@ -129,7 +129,7 @@ void blob::init_file() {
     dir = strdup(path);
     dir[strrchr(path, DB36_PATH_DELIM) - path] = DB36_STR_TERM;
 
-    fd = open(path, O_RDWR|O_CREAT|O_DSYNC, DB36_BLOB_DEFAULT_PERM);
+    fd = open(path, O_RDWR|O_CREAT|O_DIRECT, DB36_BLOB_DEFAULT_PERM);
 
     if (fd < 0)
         throw blobFileEnoentException();

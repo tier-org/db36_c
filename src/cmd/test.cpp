@@ -11,6 +11,7 @@
 #include <lib/blob.h>
 
 int main(int argc, char* argv[]) {
+    sleep(2);
     //
     // init helpers to calc time and use random
     //
