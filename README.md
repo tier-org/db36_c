@@ -2,7 +2,11 @@
 
 ```
 make -j
-make clean; make -j
+
+#
+# to recompile: clean and build
+#
+make recompile
 ```
 
 # Environment

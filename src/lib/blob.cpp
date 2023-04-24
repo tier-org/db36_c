@@ -129,7 +129,7 @@ void blob::init_file() {
     dir = strdup(path);
     dir[strrchr(path, DB36_PATH_DELIM) - path] = DB36_STR_TERM;
 
-    fd = open(path, O_RDWR|O_CREAT|O_DIRECT, DB36_BLOB_DEFAULT_PERM);
+    fd = open(path, O_RDWR|O_CREAT|O_SYNC, DB36_BLOB_DEFAULT_PERM);
 
     if (fd < 0)
         throw blobFileEnoentException();
@@ -146,7 +146,7 @@ void blob::init_file() {
     if (capacitySize - fstat.st_size > 0)
         throw blobFileSizeException();
 
-    // posix_fadvise(fd, 0, capacitySize, POSIX_FADV_RANDOM);
+    posix_fadvise(fd, 0, capacitySize, POSIX_FADV_RANDOM);
 }
 
 }}
