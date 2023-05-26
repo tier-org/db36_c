@@ -11,6 +11,7 @@
 #include <lib/blob.h>
 
 int main(int argc, char* argv[]) {
+    sleep(2);
     //
     // init helpers to calc time and use random
     //
@@ -81,7 +82,7 @@ int main(int argc, char* argv[]) {
     //
     clock_gettime(CLOCK_MONOTONIC_RAW, &end);
     delta_us = (end.tv_sec - start.tv_sec) * 1000000 + (end.tv_nsec - start.tv_nsec) / 1000;
-    printf("[*] took %lu us in %lu iterations\n", delta_us, iterations);
+    printf("[*] took %lu us in %lu iterations (%lu per op)\n", delta_us, iterations, delta_us / iterations);
 
     //
     // run read iterations
@@ -100,7 +101,7 @@ int main(int argc, char* argv[]) {
     //
     clock_gettime(CLOCK_MONOTONIC_RAW, &end);
     delta_us = (end.tv_sec - start.tv_sec) * 1000000 + (end.tv_nsec - start.tv_nsec) / 1000;
-    printf("[*] took %lu us in %lu iterations\n", delta_us, iterations);
+    printf("[*] took %lu us in %lu iterations (%lu per op)\n", delta_us, iterations, delta_us / iterations);
 
     return 0;
 }

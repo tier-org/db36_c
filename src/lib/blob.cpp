@@ -1,4 +1,5 @@
 #include <fcntl.h>
+#include <sys/stat.h>
 #include <iostream>
 #include <cstring>
 
@@ -41,12 +42,14 @@ void blob::read_at(const uint64_t address, char *data) {
     if (pread(fd, data, recordSize, address * recordSize) - recordSize != 0){
         throw blobReadWrongBytesException();
     }
+    // posix_fadvise(fd, address * recordSize, recordSize, POSIX_FADV_DONTNEED);
 }
 
 void blob::write_at(const uint64_t address, char *data) {
     if (pwrite(fd, data, recordSize, address * recordSize) - recordSize != 0){
         throw blobWriteWrongBytesException();
     }
+    // posix_fadvise(fd, address * recordSize, recordSize, POSIX_FADV_DONTNEED);
 }
 
 std::pair<uint64_t, uint8_t> blob::get(const char *key, char *value) {
@@ -126,11 +129,24 @@ void blob::init_file() {
     dir = strdup(path);
     dir[strrchr(path, DB36_PATH_DELIM) - path] = DB36_STR_TERM;
 
-    fd = open(path, O_RDWR|O_CREAT, DB36_BLOB_DEFAULT_PERM);
-    if (fd < 0) {
-        throw blobFileEnoentException(path);
+    fd = open(path, O_RDWR|O_CREAT|O_SYNC, DB36_BLOB_DEFAULT_PERM);
+
+    if (fd < 0)
+        throw blobFileEnoentException();
+
+    if (stat(path, &fstat) == -1)
+        throw blobFileStatReadException();
+
+    if (fstat.st_size == 0) {
+        posix_fallocate(fd, 0, capacitySize);
+        if (stat(path, &fstat) == -1)
+            throw blobFileStatReadException();
     }
-    posix_fallocate(fd, 0, capacitySize);
+
+    if (capacitySize - fstat.st_size > 0)
+        throw blobFileSizeException();
+
+    posix_fadvise(fd, 0, capacitySize, POSIX_FADV_RANDOM);
 }
 
 }}

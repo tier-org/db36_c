@@ -5,7 +5,7 @@ LIB_DIR=$(SRC_DIR)/lib
 CMD_DIR=$(SRC_DIR)/cmd
 
 CC=g++
-CFLAGS=-std=c++17 -Wall -O3 -I$(SRC_DIR)
+CFLAGS=-std=c++20 -Wall -O3 -I$(SRC_DIR)
 
 EXEC_PREFIX=db36_
 
@@ -22,7 +22,7 @@ all: mkdirs $(LIB_TARGETS) $(CMD_TARGETS)
 	$(MAKE) clean
 
 $(BIN_DIR)/$(EXEC_PREFIX)%: $(CMD_DIR)/%.cpp
-	$(CC) $(CFLAGS) -o $@ $(BINLIB_DIR)/*.o $(BIN_DIR)/*.o
+	$(CC) $(CFLAGS) -o $@ $(BINLIB_DIR)/*.o $(BIN_DIR)/$*.o
 
 $(BIN_DIR)/%.o: $(CMD_DIR)/%.cpp
 	$(CC) $(CFLAGS) -c $^ -o $@
@@ -36,4 +36,12 @@ mkdirs:
 .PHONY: clean
 
 clean:
-	rm -rf $(BIN_DIR)/*.o $(BINLIB_DIR)
+	rm -rf $(CMD_TARGETS) $(BINLIB_DIR)
+
+clear:
+	$(MAKE) clean
+	rm -rf $(CMD_EXECS)
+
+recompile:
+	$(MAKE) clear
+	$(MAKE) -j
