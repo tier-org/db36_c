@@ -39,7 +39,13 @@ dd if=data/file iflag=nocache count=0
 # Docker build/run
 
 ```
-sudo docker build . -t db36
+docker build . -t db36
 
-sudo docker run -it --rm -v $PWD/data:/db36_c/data --memory-swappiness=0 db36 ./bin/db36_test ./data/file 32 32 32 100000
+docker run -it --rm -v $PWD/data:/db36_c/data --memory-swappiness=0 db36 ./bin/db36_test ./data/file 32 32 32 100000
+
+#
+# test build environment
+#
+docker run -it --rm -v $PWD:/db36_c gcc:12.2.0 bash
+
 ```

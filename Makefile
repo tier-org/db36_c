@@ -5,7 +5,7 @@ LIB_DIR=$(SRC_DIR)/lib
 CMD_DIR=$(SRC_DIR)/cmd
 
 CC=g++
-CFLAGS=-std=c++17 -Wall -O3 -I$(SRC_DIR)
+CFLAGS=-std=c++20 -Wall -O3 -I$(SRC_DIR)
 
 EXEC_PREFIX=db36_
 
