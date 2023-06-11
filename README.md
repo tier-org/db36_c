@@ -1,3 +1,8 @@
+# Extreme Cardinality Database
+
+DB36 is a database for high cardinality data. Current stage is WIP, please **do not use it**, for any questions write an email to adastreamer@gmail.com.
+
+
 # Build
 
 ```
